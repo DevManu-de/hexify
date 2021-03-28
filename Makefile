@@ -3,8 +3,8 @@
 # https://github.com/danielpinto8zz6/c-cpp-project-generator/blob/master/templates/c/Makefile
 
 CC := gcc
-CFLAGS := -std=c99 -Wall -Wextra -g
-LFLAGS := -lm -lxmemtools -lcolors
+CFLAGS := -Wall -Wextra -g -Wunused-variable
+LFLAGS := -lm -lxmemtools -lncurses
 OUTPUT := output
 SRC := src
 INCLUDE := include lib
@@ -35,7 +35,6 @@ $(OUTPUT):
 
 $(MAIN): $(OBJECTS)
 	$(MAKE) -C $(LIB)/xmemtools
-	$(MAKE) -C $(LIB)/colors
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS)
 	$(CTAGS) $(CTAGSFLAGS) $(CTAGSDIRECTORIES)
 
@@ -43,13 +42,12 @@ $(MAIN): $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 run: all
-	./$(OUTPUTMAIN)
+	./$(OUTPUTMAIN) -f LICENSE
 	@echo Execution successful
 
 .PHONY: clean
 clean:
 	$(MAKE) -C $(LIB)/xmemtools clean
-	$(MAKE) -C $(LIB)/colors clean
 	$(RM) $(OUTPUT) $(OBJECTS)
 	@echo Clean successful
 
