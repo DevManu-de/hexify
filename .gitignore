@@ -1,0 +1,12 @@
+output/*
+*.o
+*.a
+*.so
+*.so.*
+*.d
+*.obj
+*.exe
+vgcore.*
+tags
+cscope.out
+

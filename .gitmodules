@@ -1,0 +1,6 @@
+[submodule "lib/xmemtools"]
+	path = lib/xmemtools
+	url = https://github.com/DevManu-de/xmemtools.git
+[submodule "lib/colors"]
+	path = lib/colors
+	url = https://github.com/DevManu-de/colors.git

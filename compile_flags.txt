@@ -1,0 +1,5 @@
+-Iinclude
+-Ilib/xmemtools/include
+-Ilib/colors/include
+
+
