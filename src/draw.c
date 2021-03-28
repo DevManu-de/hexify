@@ -74,14 +74,17 @@ void gui_draw_title(char *format, ...) {
 
 }
 
-void gui_draw_hex(byte *file) {
+void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     
+    file += file_current_offset;
     unsigned int hex_per_line = getmaxx(hex) / 3;
     unsigned int file_max_drawable = hex_per_line * getmaxy(hex);
     unsigned int file_size = strlen(file);
     unsigned int file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
     unsigned int line = 0;
     unsigned int i;
+    wmove(hex, 0, 0);
+    wmove(text, 0, 0);
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
         for (unsigned int j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             wprintw(hex, "%02x ", file[i+j]);
@@ -96,10 +99,10 @@ void gui_draw_hex(byte *file) {
             wprintw(text, "%c", file[i+j]);
         }    
         wprintw(text, "\n");
-        mvwprintw(lines, line, 1, "0x%08x:", i);
+        mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
 
     }
-    mvwprintw(lines, line, 1, "0x%08x:", i);
+    mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
 
     box(lines, ' ', 0);
     REFRESH_WINDOW(hex)
@@ -108,29 +111,49 @@ void gui_draw_hex(byte *file) {
 
 }
 
-void draw_cursor_reset() {
+void draw_cursor_reset(unsigned int *file_current_offset) {
     
     wmove(hex, 0, 0);
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_up() {
+void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
 
-    wmove(hex, getcury(hex) - 1, getcurx(hex));
+    unsigned int maxy = getmaxy(hex);
+    unsigned int cur_y = getcury(hex);
+    unsigned int cur_x = getcurx(hex);
+    unsigned int hex_per_line = getmaxx(hex) / 3;
+    if (0 == cur_y && *file_current_offset > 0) {
+        *file_current_offset -= hex_per_line;
+        gui_draw_hex(file, *file_current_offset);
+        wmove(hex, cur_y + 1, cur_x);
+    } else {
+        wmove(hex, cur_y - 1, cur_x);
+    }
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_down() {
+void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 
-    wmove(hex, getcury(hex) + 1, getcurx(hex));
+    unsigned int maxy = getmaxy(hex);
+    unsigned int cur_y = getcury(hex);
+    unsigned int cur_x = getcurx(hex);
+    unsigned int hex_per_line = getmaxx(hex) / 3;
+    if (maxy - 1 == cur_y) {
+        *file_current_offset += hex_per_line;
+        gui_draw_hex(file, *file_current_offset);
+        wmove(hex, cur_y - 1, cur_x);
+    } else {
+        wmove(hex, cur_y + 1, cur_x);
+    }
     REFRESH_WINDOW(hex)
 }
-void draw_cursor_right() {
+void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
 
     wmove(hex, getcury(hex), getcurx(hex) + 1);
     REFRESH_WINDOW(hex)
 }
-void draw_cursor_left() {
+void draw_cursor_left(unsigned int *file_current_offset, byte *file) {
 
     wmove(hex, getcury(hex), getcurx(hex)-1);
     REFRESH_WINDOW(hex)

@@ -48,13 +48,16 @@ int main(int argc, char *argv[]) {
     }
 
     size_t file_size;
+    unsigned int file_current_offset = 0;
     byte *file_content = file_name_get_content(file_name, &file_size);
 
     gui_init();
     gui_draw_title("Opened file: %s", file_name);
 
-    gui_draw_hex(file_content);
-    draw_cursor_reset();
+    gui_draw_hex(file_content, file_current_offset);
+
+
+    draw_cursor_reset(&file_current_offset);
 
     int inp;
     while ((inp = getchar()) != 'q') {
@@ -63,7 +66,7 @@ int main(int argc, char *argv[]) {
 
             case -1:
                 gui_init();
-                gui_draw_hex(file_content);
+                gui_draw_hex(file_content, file_current_offset);
                 gui_draw_title("Open file: %s", file_name);
                 break;
 
@@ -73,16 +76,16 @@ int main(int argc, char *argv[]) {
                 switch (inp) {
                     
                     case 'A':
-                        draw_cursor_up();
+                        draw_cursor_up(&file_current_offset, file_content);
                         break;
                     case 'B':
-                        draw_cursor_down();
+                        draw_cursor_down(&file_current_offset, file_content);
                         break;
                     case 'C':
-                        draw_cursor_right();
+                        draw_cursor_right(&file_current_offset, file_content);
                         break;
                     case 'D':
-                        draw_cursor_left();
+                        draw_cursor_left(&file_current_offset, file_content);
                         break;
 
                 }
