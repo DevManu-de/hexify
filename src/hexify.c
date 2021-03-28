@@ -62,7 +62,9 @@ int main(int argc, char *argv[]) {
         switch (inp) {
 
             case -1:
-                doupdate();
+                gui_init();
+                gui_draw_hex(file_content);
+                gui_draw_title("Open file: %s", file_name);
                 break;
 
             case 27:

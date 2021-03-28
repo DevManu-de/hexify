@@ -95,7 +95,6 @@ void gui_draw_hex(byte *file) {
             }
             wprintw(text, "%c", file[i+j]);
         }    
-        //wprintw(hex, "\n");
         wprintw(text, "\n");
         mvwprintw(lines, line, 1, "0x%08x:", i);
 
@@ -111,7 +110,7 @@ void gui_draw_hex(byte *file) {
 
 void draw_cursor_reset() {
     
-    wmove(hex, 1, 1);
+    wmove(hex, 0, 0);
     REFRESH_WINDOW(hex)
 }
 
