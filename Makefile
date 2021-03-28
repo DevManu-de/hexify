@@ -42,7 +42,7 @@ $(MAIN): $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 run: all
-	./$(OUTPUTMAIN) -f LICENSE
+	./$(OUTPUTMAIN) -f Makefile
 	@echo Execution successful
 
 .PHONY: clean

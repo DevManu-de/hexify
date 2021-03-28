@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
         help();
     }
 
-    char *file_name;
+    char *file_name = strdup(argv[1]);
 
     static struct option long_options[] = {
         {"file", required_argument, NULL, 'f'},
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
         switch (opts) {
 
             case 'f':
+                xfree(file_name);
                 file_name = strdup(optarg);
                 break;
             case 'h':
@@ -50,14 +51,39 @@ int main(int argc, char *argv[]) {
     byte *file_content = file_name_get_content(file_name, &file_size);
 
     gui_init();
-    gui_draw_title("THIS IS A TEST TITLE");
+    gui_draw_title("Opened file: %s", file_name);
 
     gui_draw_hex(file_content);
+    draw_cursor_reset();
 
     int inp;
     while ((inp = getchar()) != 'q') {
-        if (inp == -1) {
-            doupdate();
+
+        switch (inp) {
+
+            case -1:
+                doupdate();
+                break;
+
+            case 27:
+                getchar();
+                inp = getchar();
+                switch (inp) {
+                    
+                    case 'A':
+                        draw_cursor_up();
+                        break;
+                    case 'B':
+                        draw_cursor_down();
+                        break;
+                    case 'C':
+                        draw_cursor_right();
+                        break;
+                    case 'D':
+                        draw_cursor_left();
+                        break;
+
+                }
         }
     }
 
