@@ -135,11 +135,14 @@ void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
 
 void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 
-    unsigned int maxy = getmaxy(hex);
-    unsigned int cur_y = getcury(hex);
-    unsigned int cur_x = getcurx(hex);
-    unsigned int hex_per_line = getmaxx(hex) / 3;
-    if (maxy - 1 == cur_y) {
+    int maxy = getmaxy(hex);
+    int cur_y = getcury(hex);
+    int cur_x = getcurx(hex);
+    int hex_per_line = getmaxx(hex) / 3;
+
+    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - getmaxy(hex);
+
+    if (maxy - 1 == cur_y && down_max_count >= 0) {
         *file_current_offset += hex_per_line;
         gui_draw_hex(file, *file_current_offset);
         wmove(hex, cur_y - 1, cur_x);
