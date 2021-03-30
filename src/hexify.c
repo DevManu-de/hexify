@@ -47,16 +47,21 @@ int main(int argc, char *argv[]) {
 
     }
 
+    /* file_size is the amount of bytes of the file */
     size_t file_size;
+    /* file_current_offset is the amount of bytes from where the file is drawn on screen */
     unsigned int file_current_offset = 0;
+    /* file_content is the byte array containin the entire file */
     byte *file_content = file_name_get_content(file_name, &file_size);
 
+    /* Start gui and draw file name to title */
     gui_init();
     gui_draw_title("Opened file: %s", file_name);
 
+    /* Draw the byte count hex numbers and ascii caracters */
     gui_draw_hex(file_content, file_current_offset);
 
-
+    /* Set the cursor to the start */
     draw_cursor_reset(&file_current_offset);
 
     int inp;
@@ -65,6 +70,7 @@ int main(int argc, char *argv[]) {
         switch (inp) {
 
             case -1:
+                /* trigger a refresh when terminal got resized */
                 gui_init();
                 gui_draw_hex(file_content, file_current_offset);
                 gui_draw_title("Open file: %s", file_name);
@@ -76,15 +82,19 @@ int main(int argc, char *argv[]) {
                 switch (inp) {
                     
                     case 'A':
+                        /* Arrow up */
                         draw_cursor_up(&file_current_offset, file_content);
                         break;
                     case 'B':
+                        /* Arrow down */
                         draw_cursor_down(&file_current_offset, file_content);
                         break;
                     case 'C':
+                        /* Arrow right */
                         draw_cursor_right(&file_current_offset, file_content);
                         break;
                     case 'D':
+                        /* Arrow left */
                         draw_cursor_left(&file_current_offset, file_content);
                         break;
 

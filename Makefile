@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -Wall -Wextra -g -Wunused-variable
+CFLAGS := -Wall -Wextra -g
 LFLAGS := -lm -lxmemtools -lncurses
 OUTPUT := output
 SRC := src
