@@ -17,6 +17,7 @@ For cloning
 
 ### Compilation
 `make`
+
 An executable will appear in the `output` directory.
 
 If you see
