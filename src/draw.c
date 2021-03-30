@@ -159,11 +159,12 @@ void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
 
     int last_row_caracter_count = (characters_drawn % hex_per_line);
+    int row_count = characters_drawn / hex_per_line;
     last_row_caracter_count = (last_row_caracter_count == 0) ? hex_per_line : last_row_caracter_count;
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
 
-    if (cur_x <= last_row_caracter_count * 3 - 2) {
+    if (cur_x <= last_row_caracter_count * 3 - 2 || cur_y < row_count) {
         wmove(hex, cur_y, cur_x + 1);
         REFRESH_WINDOW(hex)
     }
