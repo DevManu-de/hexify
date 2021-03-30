@@ -12,6 +12,9 @@ There are two more flags `-v` and `-h` but they aren't very usefull currently.
 ### Dependencys
 `ncurses`
 
+For cloning
+`git clone https://github.com/DevManu-de/hexify.git --recursive`
+
 ### Compilation
 `make`
 
