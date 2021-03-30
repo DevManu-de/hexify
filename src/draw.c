@@ -79,6 +79,7 @@ void gui_draw_title(char *format, ...) {
 
 void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     
+    wclrtobot(hex);
     characters_drawn = 0;
     file += file_current_offset;
     hex_per_line = getmaxx(hex) / 3;
@@ -92,6 +93,7 @@ void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
         for (int j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             wprintw(hex, "%02x ", file[i+j]);
+            ++characters_drawn;
             switch (file[i+j]) {
                 case '\n':
                     wprintw(text, "\\n");
@@ -101,7 +103,6 @@ void gui_draw_hex(byte *file, unsigned int file_current_offset) {
                     continue;
             }
             wprintw(text, "%c", file[i+j]);
-            ++characters_drawn;
         }    
         wprintw(text, "\n");
         mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
@@ -157,11 +158,12 @@ void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 }
 void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
 
-    int last_row_caracter_count = (hex_per_line - (characters_drawn % hex_per_line)) * 2 + 3;
+    int last_row_caracter_count = (characters_drawn % hex_per_line);
+    last_row_caracter_count = (last_row_caracter_count == 0) ? hex_per_line : last_row_caracter_count;
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
 
-    if (cur_x <= last_row_caracter_count || cur_y < characters_drawn / hex_per_line) {
+    if (cur_x <= last_row_caracter_count * 3 - 2) {
         wmove(hex, cur_y, cur_x + 1);
         REFRESH_WINDOW(hex)
     }
