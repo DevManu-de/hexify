@@ -140,13 +140,17 @@ void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
 
 void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 
+    int last_row_caracter_count = (characters_drawn % hex_per_line);
+    int row_count = characters_drawn / hex_per_line;
     int maxy = getmaxy(hex);
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
 
-    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - getmaxy(hex);
+    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - maxy;
 
-    if (maxy - 1 == cur_y && down_max_count >= 0) {
+    if (cur_x >= last_row_caracter_count * 3 && cur_y == row_count - 1) {
+        wmove(hex, cur_y + 1, last_row_caracter_count * 3 - 1);
+    } else if (maxy - 1 == cur_y && down_max_count >= 0) {
         *file_current_offset += hex_per_line;
         gui_draw_hex(file, *file_current_offset);
         wmove(hex, cur_y, cur_x);
