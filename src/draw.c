@@ -11,6 +11,9 @@ static WINDOW *divider;
 static WINDOW *hex;
 static WINDOW *lines;
 
+static int characters_drawn;
+static int hex_per_line;
+
 void gui_init() {
 
     int maxx;
@@ -76,8 +79,10 @@ void gui_draw_title(char *format, ...) {
 
 void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     
+    wclrtobot(hex);
+    characters_drawn = 0;
     file += file_current_offset;
-    unsigned int hex_per_line = getmaxx(hex) / 3;
+    hex_per_line = getmaxx(hex) / 3;
     unsigned int file_max_drawable = hex_per_line * getmaxy(hex);
     unsigned int file_size = strlen(file);
     unsigned int file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
@@ -86,8 +91,9 @@ void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     wmove(hex, 0, 0);
     wmove(text, 0, 0);
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
-        for (unsigned int j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
+        for (int j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             wprintw(hex, "%02x ", file[i+j]);
+            ++characters_drawn;
             switch (file[i+j]) {
                 case '\n':
                     wprintw(text, "\\n");
@@ -122,11 +128,10 @@ void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
     unsigned int maxy = getmaxy(hex);
     unsigned int cur_y = getcury(hex);
     unsigned int cur_x = getcurx(hex);
-    unsigned int hex_per_line = getmaxx(hex) / 3;
     if (0 == cur_y && *file_current_offset > 0) {
         *file_current_offset -= hex_per_line;
         gui_draw_hex(file, *file_current_offset);
-        wmove(hex, cur_y + 1, cur_x);
+        wmove(hex, cur_y, cur_x);
     } else {
         wmove(hex, cur_y - 1, cur_x);
     }
@@ -135,26 +140,38 @@ void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
 
 void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
 
+    int last_row_caracter_count = (characters_drawn % hex_per_line);
+    int row_count = characters_drawn / hex_per_line;
     int maxy = getmaxy(hex);
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
-    int hex_per_line = getmaxx(hex) / 3;
 
-    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - getmaxy(hex);
+    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - maxy;
 
-    if (maxy - 1 == cur_y && down_max_count >= 0) {
+    if (cur_x >= last_row_caracter_count * 3 && cur_y == row_count - 1) {
+        wmove(hex, cur_y + 1, last_row_caracter_count * 3 - 1);
+    } else if (maxy - 1 == cur_y && down_max_count >= 0) {
         *file_current_offset += hex_per_line;
         gui_draw_hex(file, *file_current_offset);
-        wmove(hex, cur_y - 1, cur_x);
-    } else {
+        wmove(hex, cur_y, cur_x);
+    } else if (cur_y < characters_drawn / hex_per_line) {
+
         wmove(hex, cur_y + 1, cur_x);
     }
     REFRESH_WINDOW(hex)
 }
 void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
 
-    wmove(hex, getcury(hex), getcurx(hex) + 1);
-    REFRESH_WINDOW(hex)
+    int last_row_caracter_count = (characters_drawn % hex_per_line);
+    int row_count = characters_drawn / hex_per_line;
+    last_row_caracter_count = (last_row_caracter_count == 0) ? hex_per_line : last_row_caracter_count;
+    int cur_y = getcury(hex);
+    int cur_x = getcurx(hex);
+
+    if (cur_x <= last_row_caracter_count * 3 - 2 || cur_y < row_count) {
+        wmove(hex, cur_y, cur_x + 1);
+        REFRESH_WINDOW(hex)
+    }
 }
 void draw_cursor_left(unsigned int *file_current_offset, byte *file) {
 
