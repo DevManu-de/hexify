@@ -9,6 +9,8 @@ hexify currently only has 2 ways to open a file.
 
 There are two more flags `-v` and `-h` but they aren't very usefull currently.
 
+![img](img/20210331.175128.jpg)
+
 ### Dependencys
 `ncurses`
 
