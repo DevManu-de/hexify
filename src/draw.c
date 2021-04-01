@@ -80,10 +80,8 @@ void gui_draw_title(char *format, ...) {
 
 }
 
-void gui_draw_hex(byte *file, unsigned int file_current_offset) {
+void gui_draw_hex(byte *file, long file_current_offset) {
     
-    /* Clear hex from previous text */
-    wclrtobot(hex);
     /* Reset characters_drawn */
     characters_drawn = 0;
     /* File += file_current_offset determines which part the user gets displayed */
@@ -100,6 +98,8 @@ void gui_draw_hex(byte *file, unsigned int file_current_offset) {
     /* Reset the cursor in both windows */
     wmove(hex, 0, 0);
     wmove(text, 0, 0);
+    /* Clear hex from previous text */
+    wclrtobot(hex);
     int i; /* Jumps from line to line */
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
         /* Prints the characters in and byte numbers */
@@ -136,13 +136,13 @@ void gui_draw_hex(byte *file, unsigned int file_current_offset) {
 
 }
 
-void draw_cursor_reset(unsigned int *file_current_offset) {
+void draw_cursor_reset(long *file_current_offset) {
     
     wmove(hex, 0, 0);
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
+void draw_cursor_up(long *file_current_offset, byte *file) {
 
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
@@ -157,7 +157,7 @@ void draw_cursor_up(unsigned int *file_current_offset, byte *file) {
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
+void draw_cursor_down(long *file_current_offset, byte *file) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -171,7 +171,7 @@ void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
     int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - maxy;
 
     /* If cursor is 1 above the last line and beyond the hex numbers */
-    if (cur_x >= last_row_caracter_count * 3 && cur_y == row_count - 1) {
+    if (cur_x >= last_row_caracter_count * 3 && cur_y == row_count - 1 && down_max_count < 0) {
     /* last_row_caracter_count must be multiplied with 3 because one hex number is 2 characters and 1 space */
         wmove(hex, cur_y + 1, last_row_caracter_count * 3 - 1);
     } else if (maxy - 1 == cur_y && down_max_count >= 0) {
@@ -185,7 +185,7 @@ void draw_cursor_down(unsigned int *file_current_offset, byte *file) {
     }
     REFRESH_WINDOW(hex)
 }
-void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
+void draw_cursor_right(long *file_current_offset, byte *file) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -202,7 +202,7 @@ void draw_cursor_right(unsigned int *file_current_offset, byte *file) {
         REFRESH_WINDOW(hex)
     }
 }
-void draw_cursor_left(unsigned int *file_current_offset, byte *file) {
+void draw_cursor_left(long *file_current_offset, byte *file) {
 
     wmove(hex, getcury(hex), getcurx(hex)-1);
     REFRESH_WINDOW(hex)

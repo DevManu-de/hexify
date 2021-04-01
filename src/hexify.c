@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
     /* file_size is the amount of bytes of the file */
     size_t file_size;
     /* file_current_offset is the amount of bytes from where the file is drawn on screen */
-    unsigned int file_current_offset = 0;
+    long file_current_offset = 0;
     /* file_content is the byte array containin the entire file */
     byte *file_content = file_name_get_content(file_name, &file_size);
 
