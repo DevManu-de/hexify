@@ -111,12 +111,12 @@ int main(int argc, char *argv[]) {
 
 void help() {
 
-    printf("hexify help page");
+    printf("hexify help page\n");
     exit(0);
 }
 void version() {
     
-    printf("hexify: %s", VERSION);
+    printf("hexify: %s\n", VERSION);
     exit(0);
 
 }
