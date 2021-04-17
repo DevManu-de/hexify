@@ -80,7 +80,7 @@ void gui_draw_title(char *format, ...) {
 
 }
 
-void gui_draw_hex(byte *file, long file_current_offset) {
+void gui_draw_hex(byte *file, long file_current_offset, unsigned long file_size) {
     
     /* Reset characters_drawn */
     characters_drawn = 0;
@@ -90,8 +90,6 @@ void gui_draw_hex(byte *file, long file_current_offset) {
     hex_per_line = getmaxx(hex) / 3;
     /* File_max_drawable is the amount of hex numbers that fit in the current screen */
     int file_max_drawable = hex_per_line * getmaxy(hex);
-    /* file_size contains the size of the file */
-    int file_size = strlen(file);
     /* File_draw_size determines how many character should be displayed */
     int file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
     int line = 0;
@@ -114,6 +112,9 @@ void gui_draw_hex(byte *file, long file_current_offset) {
                     continue;
                 case '\t':
                     wprintw(text, "\\t");
+                    continue;
+                case '\r':
+                    wprintw(text, "\\r");
                     continue;
             }
             /* Print the ascii character */
@@ -142,14 +143,14 @@ void draw_cursor_reset(long *file_current_offset) {
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_up(long *file_current_offset, byte *file) {
+void draw_cursor_up(long *file_current_offset, byte *file, unsigned long file_size) {
 
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
     /* Only go up if there is content */
     if (0 == cur_y && *file_current_offset > 0) {
         *file_current_offset -= hex_per_line;
-        gui_draw_hex(file, *file_current_offset);
+        gui_draw_hex(file, *file_current_offset, file_size);
         wmove(hex, cur_y, cur_x);
     } else {
         wmove(hex, cur_y - 1, cur_x);
@@ -157,7 +158,7 @@ void draw_cursor_up(long *file_current_offset, byte *file) {
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_down(long *file_current_offset, byte *file) {
+void draw_cursor_down(long *file_current_offset, byte *file, unsigned long file_size) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -168,7 +169,7 @@ void draw_cursor_down(long *file_current_offset, byte *file) {
     int cur_x = getcurx(hex);
 
     /* down_max_count determines how many time the user can press arrow down */
-    int down_max_count = strlen(file) / hex_per_line - ((int) *file_current_offset) / hex_per_line - maxy;
+    int down_max_count = file_size / hex_per_line - ((int) *file_current_offset) / hex_per_line - maxy;
 
     /* If cursor is 1 above the last line and beyond the hex numbers */
     if (cur_x >= last_row_caracter_count * 3 && cur_y == row_count - 1 && down_max_count < 0) {
@@ -177,7 +178,7 @@ void draw_cursor_down(long *file_current_offset, byte *file) {
     } else if (maxy - 1 == cur_y && down_max_count >= 0) {
         /* Prevent user to go beyond the file */
         *file_current_offset += hex_per_line;
-        gui_draw_hex(file, *file_current_offset);
+        gui_draw_hex(file, *file_current_offset, file_size);
         wmove(hex, cur_y, cur_x);
     } else if (cur_y < characters_drawn / hex_per_line) {
         /* Move the cursor one down */
@@ -185,7 +186,7 @@ void draw_cursor_down(long *file_current_offset, byte *file) {
     }
     REFRESH_WINDOW(hex)
 }
-void draw_cursor_right(long *file_current_offset, byte *file) {
+void draw_cursor_right(long *file_current_offset, byte *file, unsigned long file_size) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -202,7 +203,7 @@ void draw_cursor_right(long *file_current_offset, byte *file) {
         REFRESH_WINDOW(hex)
     }
 }
-void draw_cursor_left(long *file_current_offset, byte *file) {
+void draw_cursor_left(long *file_current_offset, byte *file, unsigned long file_size) {
 
     wmove(hex, getcury(hex), getcurx(hex)-1);
     REFRESH_WINDOW(hex)

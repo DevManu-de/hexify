@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
     gui_draw_title("Opened file: %s", file_name);
 
     /* Draw the byte count hex numbers and ascii caracters */
-    gui_draw_hex(file_content, file_current_offset);
+    gui_draw_hex(file_content, file_current_offset, file_size);
 
     /* Set the cursor to the start */
     draw_cursor_reset(&file_current_offset);
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
             case -1:
                 /* trigger a refresh when terminal got resized */
                 gui_init();
-                gui_draw_hex(file_content, file_current_offset);
+                gui_draw_hex(file_content, file_current_offset, file_size);
                 gui_draw_title("Open file: %s", file_name);
                 break;
 
@@ -83,19 +83,19 @@ int main(int argc, char *argv[]) {
                     
                     case 'A':
                         /* Arrow up */
-                        draw_cursor_up(&file_current_offset, file_content);
+                        draw_cursor_up(&file_current_offset, file_content, file_size);
                         break;
                     case 'B':
                         /* Arrow down */
-                        draw_cursor_down(&file_current_offset, file_content);
+                        draw_cursor_down(&file_current_offset, file_content, file_size);
                         break;
                     case 'C':
                         /* Arrow right */
-                        draw_cursor_right(&file_current_offset, file_content);
+                        draw_cursor_right(&file_current_offset, file_content, file_size);
                         break;
                     case 'D':
                         /* Arrow left */
-                        draw_cursor_left(&file_current_offset, file_content);
+                        draw_cursor_left(&file_current_offset, file_content, file_size);
                         break;
 
                 }
