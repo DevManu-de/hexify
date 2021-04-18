@@ -15,7 +15,7 @@ static WINDOW *lines;
  * it contains the amount of characters that were drawn 1 hex number is 1 character drawn */
 static int characters_drawn;
 /* Contains the amount of hex numbers that are in one row */
-static int hex_per_line;
+static long hex_per_line;
 
 void gui_init() {
 
@@ -80,30 +80,31 @@ void gui_draw_title(char *format, ...) {
 
 }
 
-void gui_draw_hex(byte *file, long file_current_offset, unsigned long file_size) {
+void gui_draw_hex(byte *file, long file_current_offset, long file_size) {
     
     /* Reset characters_drawn */
     characters_drawn = 0;
     /* File += file_current_offset determines which part the user gets displayed */
     file += file_current_offset;
+    file_size -= file_current_offset;
     /* Update hex_per_line */
     hex_per_line = getmaxx(hex) / 3;
     /* File_max_drawable is the amount of hex numbers that fit in the current screen */
-    int file_max_drawable = hex_per_line * getmaxy(hex);
+    long file_max_drawable = hex_per_line * getmaxy(hex);
     /* File_draw_size determines how many character should be displayed */
-    int file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
-    int line = 0;
+    long file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
+    long line = 0;
     /* Reset the cursor in both windows */
     wmove(hex, 0, 0);
     wmove(text, 0, 0);
     /* Clear hex from previous text */
     wclrtobot(hex);
-    int i; /* Jumps from line to line */
+    long i; /* Jumps from line to line */
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
         /* Prints the characters in and byte numbers */
-        for (int j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
+        for (long j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             /* Display the hex numbers */
-            wprintw(hex, "%02x ", file[i+j]);
+            wprintw(hex, "%02x ", file[i+j] < 0 ? 0 : file[i+j]);
             ++characters_drawn;
             /* Determine if an tab or line break character was encountered */
             switch (file[i+j]) {
@@ -143,7 +144,7 @@ void draw_cursor_reset(long *file_current_offset) {
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_up(long *file_current_offset, byte *file, unsigned long file_size) {
+void draw_cursor_up(long *file_current_offset, byte *file, long file_size) {
 
     int cur_y = getcury(hex);
     int cur_x = getcurx(hex);
@@ -158,7 +159,7 @@ void draw_cursor_up(long *file_current_offset, byte *file, unsigned long file_si
     REFRESH_WINDOW(hex)
 }
 
-void draw_cursor_down(long *file_current_offset, byte *file, unsigned long file_size) {
+void draw_cursor_down(long *file_current_offset, byte *file, long file_size) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -186,7 +187,7 @@ void draw_cursor_down(long *file_current_offset, byte *file, unsigned long file_
     }
     REFRESH_WINDOW(hex)
 }
-void draw_cursor_right(long *file_current_offset, byte *file, unsigned long file_size) {
+void draw_cursor_right(long *file_current_offset, byte *file, long file_size) {
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     int last_row_caracter_count = (characters_drawn % hex_per_line);
@@ -203,7 +204,7 @@ void draw_cursor_right(long *file_current_offset, byte *file, unsigned long file
         REFRESH_WINDOW(hex)
     }
 }
-void draw_cursor_left(long *file_current_offset, byte *file, unsigned long file_size) {
+void draw_cursor_left(long *file_current_offset, byte *file, long file_size) {
 
     wmove(hex, getcury(hex), getcurx(hex)-1);
     REFRESH_WINDOW(hex)

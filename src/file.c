@@ -17,7 +17,7 @@ byte *file_name_get_content(char *file_name, size_t *size) {
     *size = ftell(file);
     fseek(file, 0, SEEK_SET);
     
-    byte *file_content = xmalloc(*size + 1);
+    byte *file_content = xmalloc(*size);
     fread(file_content, *size, sizeof(byte), file);
     fclose(file);
 
