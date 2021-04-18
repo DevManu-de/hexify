@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
             case 'r':
                 ratio = strtof(optarg, NULL);
                 if (ratio <= 0 || ratio >= 1) {
-                    die(RATERR, "ratio (%f) must be betweem 0 and 1", ratio);
+                    die(RATERR, "ratio (%s) must be betweem 0 and 1", optarg);
                 }
                 break;
             case 'h':

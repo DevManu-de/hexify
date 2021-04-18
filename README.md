@@ -5,8 +5,13 @@ is a program for displaying files in hex and also giving an ascii letter to each
 
 ## Usage
 hexify currently only has 2 ways to open a file.
-- 1 hexify \<file-name>
-- 2 hexify -f \<file-name>
+- hexify \<file-name>
+- hexify -f \<file-name>
+
+### Other flags
+- hexify -r \<float> `Bigger = more ascii characters`
+- hexify -h
+- hexify -v 
 
 There are two more flags `-v` and `-h` but they aren't very usefull currently.
 
