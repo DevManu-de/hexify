@@ -9,13 +9,13 @@
                             wrefresh(win);          \
 
 void gui_init();
-void gui_draw_title(char *format, ...);
-void gui_draw_hex(byte *file, long file_current_offset, long file_size);
-void draw_cursor_reset(long *file_current_offset);
-void draw_cursor_up(long *file_current_offset, byte *file, long file_size);
-void draw_cursor_down(long *file_current_offset, byte *file, long file_size);
-void draw_cursor_right(long *file_current_offset, byte *file, long file_size);
-void draw_cursor_left(long *file_current_offset, byte *file, long file_size);
+void gui_draw_title(const char *format, ...);
+void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size);
+void draw_cursor_reset();
+void draw_cursor_up(size_t *file_current_offset, byte *file, size_t file_size);
+void draw_cursor_down(size_t *file_current_offset, byte *file, size_t file_size);
+void draw_cursor_right(size_t *file_current_offset, byte *file, size_t file_size);
+void draw_cursor_left(size_t *file_current_offset, byte *file, size_t file_size);
 void gui_end();
 
 #endif
