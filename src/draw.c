@@ -104,7 +104,11 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
         /* Prints the characters in and byte numbers */
         for (size_t j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             /* Display the hex numbers */
-            wprintw(hex, "%02x ", file[i+j] < 0 ? 0 : file[i+j]);
+            wprintw(hex, "%02x", file[i+j] < 0 ? 0 : file[i+j]);
+            if (j < hex_per_line-1)
+                wprintw(hex, " ");
+            else
+                wprintw(hex, "\n");
             ++characters_drawn;
             /* Determine if an tab or line break character was encountered */
             switch (file[i+j]) {
