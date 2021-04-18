@@ -5,4 +5,14 @@
 
 typedef char byte;
 
+enum errcodes {
+
+    SUCCESS,
+    ARGERR,
+    FILEERR
+
+};
+
+void die(enum errcodes errcode, const char *format, ...);
+
 #endif

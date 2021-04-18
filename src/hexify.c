@@ -42,6 +42,9 @@ int main(int argc, char *argv[]) {
             case 'v':
                 version();
                 break;
+            default:
+                die(ARGERR, NULL);
+                break;
 
         }
 
@@ -116,10 +119,22 @@ void help() {
     printf("hexify help page\n");
     exit(0);
 }
+
 void version() {
     
     printf("hexify: %s\n", VERSION);
     exit(0);
+}
 
+void die(enum errcodes errcode, const char *format, ...) {
+    gui_end();
+    va_list ap;
+    va_start(ap, format);
+    vfprintf(stderr, format, ap);
+    if (format != NULL) {
+        putc('\n', stderr);
+    }
+    va_end(ap);
+    exit(errcode);
 }
 

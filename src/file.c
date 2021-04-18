@@ -10,8 +10,7 @@ byte *file_name_get_content(char *file_name, size_t *size) {
 
     FILE *file = fopen(file_name, "rb");
     if (!file) {
-        gui_end();
-        fprintf(stderr, "%s not found", file_name);
+        die(FILEERR, "File: %s not found", file_name);
     }
     fseek(file, 0, SEEK_END);
     *size = ftell(file);
