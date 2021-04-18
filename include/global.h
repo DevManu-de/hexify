@@ -9,6 +9,7 @@ enum errcodes {
 
     SUCCESS,
     ARGERR,
+    RATERR,
     FILEERR
 
 };

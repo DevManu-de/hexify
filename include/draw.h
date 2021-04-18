@@ -8,7 +8,7 @@
 #define REFRESH_WINDOW(win) refresh();              \
                             wrefresh(win);          \
 
-void gui_init();
+void gui_init(float ratio);
 void gui_draw_title(const char *format, ...);
 void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size);
 void draw_cursor_reset();

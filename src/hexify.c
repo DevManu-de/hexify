@@ -19,22 +19,30 @@ int main(int argc, char *argv[]) {
     }
 
     char *file_name = strdup(argv[1]);
+    float ratio = 0.3;
 
     static struct option long_options[] = {
         {"file", required_argument, NULL, 'f'},
+        {"ratio", required_argument, NULL, 'r'},
         {"help", no_argument, NULL, 'h'},
         {"version", no_argument, NULL, 'v'}
 
     };
 
     int opts;
-    while ((opts = getopt_long(argc, argv, "f:hv", long_options, NULL)) != -1) {
+    while ((opts = getopt_long(argc, argv, "f:r:hv", long_options, NULL)) != -1) {
 
         switch (opts) {
 
             case 'f':
                 xfree(file_name);
                 file_name = strdup(optarg);
+                break;
+            case 'r':
+                ratio = strtof(optarg, NULL);
+                if (ratio <= 0 || ratio >= 1) {
+                    die(RATERR, "ratio (%f) must be betweem 0 and 1", ratio);
+                }
                 break;
             case 'h':
                 help();
@@ -60,7 +68,7 @@ int main(int argc, char *argv[]) {
     byte *file_content = file_name_get_content(file_name, &file_size);
 
     /* Start gui and draw file name to title */
-    gui_init();
+    gui_init(ratio);
     gui_draw_title("Opened file: %s", file_name);
 
     /* Draw the byte count hex numbers and ascii caracters */
@@ -76,7 +84,7 @@ int main(int argc, char *argv[]) {
 
             case -1:
                 /* trigger a refresh when terminal got resized */
-                gui_init();
+                gui_init(ratio);
                 gui_draw_hex(file_content, file_current_offset, file_size);
                 gui_draw_title("Open file: %s", file_name);
                 break;

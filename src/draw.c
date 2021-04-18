@@ -17,7 +17,7 @@ static size_t characters_drawn;
 /* Contains the amount of hex numbers that are in one row */
 static size_t hex_per_line;
 
-void gui_init() {
+void gui_init(float ratio) {
 
     int maxx;
     int maxy;
@@ -27,7 +27,7 @@ void gui_init() {
 
     getmaxyx(stdscr, maxy, maxx);
     /* Calculate hex and text ratio */
-    int split = maxx * 0.30;
+    int split = maxx * ratio;
 
     unsigned int title_height = 3;
     unsigned int title_width = maxx;
