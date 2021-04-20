@@ -14,12 +14,14 @@ void version();
 
 int main(int argc, char *argv[]) {
     
+    char *file_name;
+    float ratio = 0.24;
+
     if (argc < 2) {
         help();
+    } else if (argc == 2) {
+        file_name = strdup(argv[1]);
     }
-
-    char *file_name = strdup(argv[1]);
-    float ratio = 0.3;
 
     static struct option long_options[] = {
         {"file", required_argument, NULL, 'f'},
@@ -31,17 +33,14 @@ int main(int argc, char *argv[]) {
 
     int opts;
     while ((opts = getopt_long(argc, argv, "f:r:hv", long_options, NULL)) != -1) {
-
         switch (opts) {
-
             case 'f':
-                xfree(file_name);
                 file_name = strdup(optarg);
                 break;
             case 'r':
                 ratio = strtof(optarg, NULL);
-                if (ratio <= 0 || ratio >= 1) {
-                    die(RATERR, "ratio (%s) must be betweem 0 and 1", optarg);
+                if (ratio <= 0.0f || ratio >= 1.0f) {
+                    die(RATERR, "ratio (%s) must be between 0 and 1", optarg);
                 }
                 break;
             case 'h':
@@ -53,7 +52,6 @@ int main(int argc, char *argv[]) {
             default:
                 die(ARGERR, NULL);
                 break;
-
         }
 
     }
@@ -79,21 +77,17 @@ int main(int argc, char *argv[]) {
 
     int inp;
     while ((inp = getchar()) != 'q') {
-
         switch (inp) {
-
             case -1:
                 /* trigger a refresh when terminal got resized */
                 gui_init(ratio);
                 gui_draw_hex(file_content, file_current_offset, file_size);
                 gui_draw_title("Open file: %s", file_name);
                 break;
-
             case 27:
                 getchar();
                 inp = getchar();
                 switch (inp) {
-                    
                     case 'A':
                         /* Arrow up */
                         draw_cursor_up(&file_current_offset, file_content, file_size);
@@ -110,7 +104,6 @@ int main(int argc, char *argv[]) {
                         /* Arrow left */
                         draw_cursor_left(&file_current_offset, file_content, file_size);
                         break;
-
                 }
         }
     }

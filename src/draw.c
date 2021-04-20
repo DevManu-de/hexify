@@ -11,7 +11,7 @@ static WINDOW *divider;
 static WINDOW *hex;
 static WINDOW *lines;
 
-/* Characters_drawn is a variable that updated every time gui_draw_hex is ran
+/* Characters_drawn is a variable that updated every time gui_draw_hex was executed
  * it contains the amount of characters that were drawn 1 hex number is 1 character drawn */
 static size_t characters_drawn;
 /* Contains the amount of hex numbers that are in one row */
@@ -99,31 +99,26 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
     wmove(text, 0, 0);
     /* Clear hex from previous text */
     wclrtobot(hex);
+    wclrtobot(text);
+    wclrtobot(lines);
     size_t i; /* Jumps from line to line */
     for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
         /* Prints the characters in and byte numbers */
         for (size_t j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
-            /* Display the hex numbers */
+            /* Display the hex numbers and 0 if number is negativ*/
             wprintw(hex, "%02x", file[i+j] < 0 ? 0 : file[i+j]);
-            if (j < hex_per_line-1)
+            if (j < hex_per_line-1) {
                 wprintw(hex, " ");
-            else
+            } else {
                 wprintw(hex, "\n");
-            ++characters_drawn;
-            /* Determine if an tab or line break character was encountered */
-            switch (file[i+j]) {
-                case '\n':
-                    wprintw(text, "\\n");
-                    continue;
-                case '\t':
-                    wprintw(text, "\\t");
-                    continue;
-                case '\r':
-                    wprintw(text, "\\r");
-                    continue;
             }
-            /* Print the ascii character */
-            wprintw(text, "%c", file[i+j]);
+            ++characters_drawn;
+            /* If character is allowed or just an irrelevant number */
+            if (file[i+j] >= '!' && file[i+j] <= '~') {
+                wprintw(text, "%c", file[i+j]);
+            } else {
+                wprintw(text, ".");
+            }
         }
         /* Print a newline at the text window */
         wprintw(text, "\n");

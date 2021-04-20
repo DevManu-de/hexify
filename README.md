@@ -1,7 +1,7 @@
 # hexify
 is a program for displaying files in hex and also giving an ascii letter to each hex number in a nice terminal gui.
 ## Description
-![img](img/20210331.175128.jpg)
+![img](img/20210420.173900.jpg)
 
 ## Usage
 hexify currently only has 2 ways to open a file.
@@ -9,7 +9,7 @@ hexify currently only has 2 ways to open a file.
 - hexify -f \<file-name>
 
 ### Other flags
-- hexify -r \<float> `Bigger = more ascii characters`
+- hexify -r \<float> `Bigger = more ascii characters (0-1)`
 - hexify -h
 - hexify -v 
 
