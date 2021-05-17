@@ -9,7 +9,7 @@ hexify currently only has 2 ways to open a file.
 - hexify -f \<file-name>
 
 ### Other flags
-- hexify -r \<float> `Bigger = more ascii characters (0-1)`
+- hexify -r \<float> `Bigger = more ascii characters, number must be between 0 and 1 (0 and 1 are exclusive)`
 - hexify -h
 - hexify -v 
 

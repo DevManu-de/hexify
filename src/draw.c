@@ -13,9 +13,9 @@ static WINDOW *lines;
 
 /* Characters_drawn is a variable that updated every time gui_draw_hex was executed
  * it contains the amount of characters that were drawn 1 hex number is 1 character drawn */
-static size_t characters_drawn;
+static size_t characters_drawn = 0;
 /* Contains the amount of hex numbers that are in one row */
-static size_t hex_per_line;
+static size_t hex_per_line = 0;
 
 void gui_init(float ratio) {
 
