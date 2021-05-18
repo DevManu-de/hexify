@@ -14,7 +14,7 @@ void version();
 
 int main(int argc, char *argv[]) {
     
-    char *file_name;
+    char *file_name = NULL;
     float ratio = 0.24;
 
     if (argc < 2) {
@@ -36,11 +36,14 @@ int main(int argc, char *argv[]) {
                 file_name = strdup(optarg);
                 break;
             case 'r':
-                ratio = strtof(optarg, NULL);
-                if (ratio <= 0.0f || ratio >= 1.0f) {
-                    die(RATERR, "ratio (%s) must be between 0 and 1 like %f", optarg, ratio);
+                {
+                    float tmp_ratio = strtof(optarg, NULL);
+                    if (tmp_ratio <= 0.0f || tmp_ratio >= 1.0f) {
+                        die(RATERR, "ratio (%s) must be between 0 and 1 like %1.2f", optarg, ratio);
+                    }
+                    ratio = tmp_ratio;
+                    break;
                 }
-                break;
             case 'h':
                 help();
                 break;
@@ -125,23 +128,26 @@ void help() {
     printf("\t-v or --version displays the version\n");
     printf("\t-f or --file specifies the file (may not be specified)\n");
     printf("\t-r or --ratio specifies the ratio between hex and ascii (optional)\n");
-    exit(0);
+    die(SUCCESS, NULL);
 }
 
 void version() {
     
     printf("hexify: %s\n", VERSION);
-    exit(0);
+    die(SUCCESS, NULL);
 }
 
 void die(enum errcodes errcode, const char *format, ...) {
     gui_end();
-    va_list ap;
-    va_start(ap, format);
-    vfprintf(stderr, format, ap);
-    va_end(ap);
-    if (format != NULL) {
-        putc('\n', stderr);
+    if (errcode) {
+        va_list ap;
+        va_start(ap, format);
+        fprintf(stderr, "Error code: %d\n", errcode);
+        vfprintf(stderr, format, ap);
+        va_end(ap);
+        if (format != NULL) {
+            putc('\n', stderr);
+        }
     }
     exit(errcode);
 }

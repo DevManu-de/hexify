@@ -13,7 +13,7 @@ hexify currently only has 2 ways to open a file.
 - hexify -h
 - hexify -v 
 
-There are two more flags `-v` and `-h` but they aren't very usefull currently.
+to quit just press `q`
 
 ### Dependencys
 `ncurses`
