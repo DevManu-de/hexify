@@ -12,6 +12,7 @@ byte *file_name_get_content(char *file_name, size_t *size) {
     if (!file) {
         die(FILEERR, "File: %s not found", file_name);
     }
+
     fseek(file, 0, SEEK_END);
     *size = ftell(file);
     fseek(file, 0, SEEK_SET);

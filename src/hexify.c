@@ -19,8 +19,6 @@ int main(int argc, char *argv[]) {
 
     if (argc < 2) {
         help();
-    } else if (argc == 2) {
-        file_name = strdup(argv[1]);
     }
 
     static struct option long_options[] = {
@@ -40,7 +38,7 @@ int main(int argc, char *argv[]) {
             case 'r':
                 ratio = strtof(optarg, NULL);
                 if (ratio <= 0.0f || ratio >= 1.0f) {
-                    die(RATERR, "ratio (%s) must be between 0 and 1", optarg);
+                    die(RATERR, "ratio (%s) must be between 0 and 1 like %f", optarg, ratio);
                 }
                 break;
             case 'h':
@@ -54,6 +52,11 @@ int main(int argc, char *argv[]) {
                 break;
         }
 
+    }
+
+    /* Get file name if -f was not specified */
+    if (optind < argc) {
+        file_name = strdup(argv[optind]);
     }
 
     /* file_size is the amount of bytes of the file */
@@ -117,7 +120,11 @@ int main(int argc, char *argv[]) {
 
 void help() {
 
-    printf("hexify help page\n");
+    printf("hexify help page:\n");
+    printf("\t-h or --help displays this text\n");
+    printf("\t-v or --version displays the version\n");
+    printf("\t-f or --file specifies the file (may not be specified)\n");
+    printf("\t-r or --ratio specifies the ratio between hex and ascii (optional)\n");
     exit(0);
 }
 
@@ -132,10 +139,10 @@ void die(enum errcodes errcode, const char *format, ...) {
     va_list ap;
     va_start(ap, format);
     vfprintf(stderr, format, ap);
+    va_end(ap);
     if (format != NULL) {
         putc('\n', stderr);
     }
-    va_end(ap);
     exit(errcode);
 }
 
