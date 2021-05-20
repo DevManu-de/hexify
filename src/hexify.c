@@ -26,7 +26,6 @@ int main(int argc, char *argv[]) {
         {"ratio", required_argument, NULL, 'r'},
         {"help", no_argument, NULL, 'h'},
         {"version", no_argument, NULL, 'v'}
-
     };
 
     int opts;
@@ -35,8 +34,7 @@ int main(int argc, char *argv[]) {
             case 'f':
                 file_name = strdup(optarg);
                 break;
-            case 'r':
-                {
+            case 'r': {
                     float tmp_ratio = strtof(optarg, NULL);
                     if (tmp_ratio <= 0.0f || tmp_ratio >= 1.0f) {
                         die(RATERR, "ratio (%s) must be between 0 and 1 like %1.2f", optarg, ratio);
