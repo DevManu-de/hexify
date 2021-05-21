@@ -35,12 +35,12 @@ int main(int argc, char *argv[]) {
                 file_name = strdup(optarg);
                 break;
             case 'r': {
-                    float tmp_ratio = strtof(optarg, NULL);
-                    if (tmp_ratio <= 0.0f || tmp_ratio >= 1.0f) {
-                        die(RATERR, "ratio (%s) must be between 0 and 1 like %1.2f", optarg, ratio);
-                    }
-                    ratio = tmp_ratio;
-                    break;
+                float tmp_ratio = strtof(optarg, NULL);
+                if (tmp_ratio <= 0.0f || tmp_ratio >= 1.0f) {
+                    die(RATERR, "ratio (%s) must be between 0 and 1 like %1.2f", optarg, ratio);
+                }
+                ratio = tmp_ratio;
+                break;
                 }
             case 'h':
                 help();
@@ -137,15 +137,15 @@ void version() {
 
 void die(enum errcodes errcode, const char *format, ...) {
     gui_end();
+    va_list ap;
+    va_start(ap, format);
     if (errcode) {
-        va_list ap;
-        va_start(ap, format);
         fprintf(stderr, "Error code: %d\n", errcode);
-        vfprintf(stderr, format, ap);
-        va_end(ap);
-        if (format != NULL) {
-            putc('\n', stderr);
-        }
+    }
+    vfprintf(stderr, format, ap);
+    va_end(ap);
+    if (format != NULL) {
+        putc('\n', stderr);
     }
     exit(errcode);
 }
