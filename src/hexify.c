@@ -14,7 +14,7 @@ void version();
 
 int main(int argc, char *argv[]) {
     
-    char *file_name = NULL;
+    char *file_name;
     float ratio = 0.24;
 
     if (argc < 2) {
