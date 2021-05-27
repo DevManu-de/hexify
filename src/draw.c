@@ -198,15 +198,15 @@ void draw_cursor_right(__attribute__((unused)) size_t *file_current_offset, __at
 
     /* last_row_caracter_count is the amout of hex numbers in the last line that is on the screen visible */
     size_t last_row_caracter_count = (characters_drawn % hex_per_line);
-    /* row_count is the amount of lines that were drawn on screen */
-    size_t row_count = characters_drawn / hex_per_line;
     /* If last_row_caracter_count is 0 then the line is completely filled with hex numbers */
     last_row_caracter_count = (last_row_caracter_count == 0) ? hex_per_line : last_row_caracter_count;
+    /* row_count is the amount of lines that were drawn on screen */
+    size_t row_count = characters_drawn / hex_per_line;
     unsigned int cur_y = getcury(hex);
     unsigned int cur_x = getcurx(hex);
 
     /* last_row_caracter_count must be multiplied with 3 because one hex number is 2 characters and 1 space */
-    if (cur_x <= last_row_caracter_count * 3 - 2 || cur_y < row_count) {
+    if (cur_x <= last_row_caracter_count * 3 - 2 || (cur_y < row_count && cur_x < hex_per_line * 3 - 2)) {
         wmove(hex, cur_y, cur_x + 1);
         REFRESH_WINDOW(hex)
     }
