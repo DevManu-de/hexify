@@ -93,7 +93,7 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
     size_t file_max_drawable = hex_per_line * getmaxy(hex);
     /* File_draw_size determines how many character should be displayed */
     size_t file_draw_size = (file_max_drawable < file_size) ? file_max_drawable : file_size;
-    size_t line = 0;
+    size_t line = 1;
     /* Reset the cursor in both windows */
     wmove(hex, 0, 0);
     wmove(text, 0, 0);
@@ -102,7 +102,7 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
     wclrtobot(text);
     wclrtobot(lines);
     size_t i; /* Jumps from line to line */
-    for (i = 0; i < file_draw_size; i += hex_per_line, ++line) {
+    for (i = 0; i < file_draw_size; ++line) {
         /* Prints the characters in and byte numbers */
         for (size_t j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
             /* Display the hex numbers and 0 if number is negativ*/
@@ -120,14 +120,13 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
                 wprintw(text, ".");
             }
         }
+        i += hex_per_line;
         /* Print a newline at the text window */
         wprintw(text, "\n");
         /* Display the byte numbers */
         mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
 
     }
-    /* Print the final line because its out of the loop */
-    mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
 
     /* Redraw the box arount the byte numbers */
     box(lines, ' ', 0);
