@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
         help();
     }
 
-    const static struct option long_options[] = {
+    static const struct option long_options[] = {
         {"file", required_argument, NULL, 'f'},
         {"ratio", required_argument, NULL, 'r'},
         {"help", no_argument, NULL, 'h'},

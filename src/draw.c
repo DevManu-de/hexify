@@ -124,7 +124,7 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
         /* Print a newline at the text window */
         wprintw(text, "\n");
         /* Display the byte numbers */
-        mvwprintw(lines, line, 1, "0x%08x:", i + file_current_offset);
+        mvwprintw(lines, line, 1, "0x%08lx:", i + file_current_offset);
 
     }
 
