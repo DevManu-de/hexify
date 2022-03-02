@@ -30,7 +30,7 @@ $(OUTPUT):
 	$(MD) $(OUTPUT)
 
 $(MAIN): $(OBJECTS)
-	$(MAKE) -C $(LIB)/xmemtools
+	$(MAKE) -C $(LIB)/xmemtools -i
 	$(CC) $(CFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS)
 	$(CTAGS) $(CTAGSFLAGS) $(CTAGSDIRECTORIES)
 
