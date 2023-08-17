@@ -1,0 +1,10 @@
+{
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/manuel/Documents/code/c/projects/hexify/output",
+            "binaryPath": "/home/manuel/Documents/code/c/projects/hexify/output/hexify",
+            "binaryArgs": []
+        }
+    ],
+    "cmake.configureOnOpen": true
+}

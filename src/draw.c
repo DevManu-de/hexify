@@ -105,8 +105,8 @@ void gui_draw_hex(byte *file, size_t file_current_offset, size_t file_size) {
     for (i = 0; i < file_draw_size; ++line) {
         /* Prints the characters in and byte numbers */
         for (size_t j = 0; (j < hex_per_line) && (i + j < file_draw_size); ++j) {
-            /* Display the hex numbers and 0 if number is negativ*/
-            wprintw(hex, "%02x", file[i+j] < 0 ? 0 : file[i+j]);
+            /* Display the hex numbers */
+            wprintw(hex, "%02X", file[i+j]);
             if (j < hex_per_line-1) {
                 wprintw(hex, " ");
             } else {

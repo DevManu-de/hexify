@@ -3,7 +3,7 @@
 
 #define VERSION "0.2.2"
 
-typedef char byte;
+typedef unsigned char byte;
 
 enum errcodes {
 
